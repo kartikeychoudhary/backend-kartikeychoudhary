@@ -27,6 +27,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kartikeychoudhary.exceptions.CustomWebsiteRuntimeException;
 import com.kartikeychoudhary.implementations.UserImplementation;
 import com.kartikeychoudhary.modal.Contact;
 import com.kartikeychoudhary.modal.Role;
@@ -48,7 +49,11 @@ public class WebsiteController {
 	@PostMapping("/contact")
 	ResponseEntity<?> saveContact(@RequestBody Contact contact){
 		contact.setArchived(false);
-		websiteService.saveContact(contact);
+		try {
+			websiteService.saveContact(contact);
+		}catch(CustomWebsiteRuntimeException e) {
+			return ResponseEntity.badRequest().build();
+		}
 		return ResponseEntity.ok().build();
 	}
 	

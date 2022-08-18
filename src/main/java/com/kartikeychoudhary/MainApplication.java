@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.kartikeychoudhary.implementations.UserImplementation;
 import com.kartikeychoudhary.modal.Role;
 import com.kartikeychoudhary.modal.User;
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 
 /** 
  * @author 	Kartikey Choudhary (https://kartikeychoudhary.com)
@@ -20,6 +21,7 @@ import com.kartikeychoudhary.modal.User;
  */
 
 @SpringBootApplication
+@EnableEncryptableProperties
 public class MainApplication {
 
 	public static void main(String[] args) {
@@ -30,16 +32,17 @@ public class MainApplication {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Bean
-	CommandLineRunner run(UserImplementation userImpl) {
-		return args -> {
-			userImpl.saveRole(new Role(null, "ROLE_USER"));
-			userImpl.saveRole(new Role(null, "ROLE_ADMIN"));
-			userImpl.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
-			
-			userImpl.saveUser(new User(null, "Admin", "admin@test.com", "admin", new ArrayList<>()));
-			userImpl.addRoleToUser("admin@test.com", "ROLE_SUPER_ADMIN");
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(UserImplementation userImpl) {
+//		return args -> {
+//			if(userImpl.getUser("admin@admin.com")==null) {
+//				userImpl.saveRole(new Role(null, "ROLE_USER"));
+//				userImpl.saveRole(new Role(null, "ROLE_ADMIN"));
+//				userImpl.saveRole(new Role(null, "ROLE_SUPER_ADMIN"));
+//				userImpl.saveUser(new User(null, "Admin", "admin@admin.com", "admin", new ArrayList<>()));
+//				userImpl.addRoleToUser("admin@admin.com", "ROLE_SUPER_ADMIN");
+//				}
+//			};
+//	}
 
 }

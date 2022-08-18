@@ -53,22 +53,20 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		log.info("START : successfulAuthentication()");
 		User user = (User) authentication.getPrincipal();
 		Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); // WIP save somewhere secure
-		String access_token = JWT.create()
+		String accessToken = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+ 1000*60*60*24))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.sign(algorithm);
-		String refresh_token = JWT.create()
+		String refreshToken = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+ 1000*60*60*24*7))
 				.withIssuer(request.getRequestURL().toString())
 				.sign(algorithm);
-//		response.setHeader("access_token", access_token);
-//		response.setHeader("refresh_token", refresh_token);
 		HashMap<String, String> tokens = new HashMap<>();
-		tokens.put("access_token", access_token);
-		tokens.put("refresh_token", refresh_token);
+		tokens.put("access_token", accessToken);
+		tokens.put("refresh_token", refreshToken);
 		log.info("END : successfulAuthentication()");
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}
