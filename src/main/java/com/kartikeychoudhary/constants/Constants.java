@@ -8,4 +8,19 @@ public class Constants {
 	public static final String USER		 	= "USER";
 	
 	public static final String LOGIN_URL 	= "api/v1/login";
+	
+	public static final String SUBJECT_LENGTH_ERROR = "Subject length exceded the max allowed value";
+	public static final String EMAIL_LENGTH_ERROR = "Email not allowed";
+	public static final String MESSAGE_LENGTH_ERROR = "Message length exceded the max allowed value";
+
+	public static final String MESSAGE = "MESSAGE";
+	public static final String RESPONSE = "RESPONSE";
+	public static final String RESULT = "RESULT";
+	public static final String ERROR = "ERROR";
+
+
+	public static final String TOKEN = "TOKEN";
+	public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+
+
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,11 +28,14 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kartikeychoudhary.constants.Constants;
+import com.kartikeychoudhary.dto.ContactDTO;
 import com.kartikeychoudhary.exceptions.CustomWebsiteRuntimeException;
 import com.kartikeychoudhary.implementations.UserImplementation;
 import com.kartikeychoudhary.modal.Contact;
 import com.kartikeychoudhary.modal.Role;
 import com.kartikeychoudhary.modal.User;
+import com.kartikeychoudhary.response.GenericResponse;
 import com.kartikeychoudhary.services.WebsiteService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,25 +50,44 @@ public class WebsiteController {
 	private final UserImplementation userImpl;
 	private final WebsiteService websiteService;
 	
+	GenericResponse gr;
+	Map<String, Object> payload;
+	HttpStatus status;
+	
 	@PostMapping("/contact")
-	ResponseEntity<?> saveContact(@RequestBody Contact contact){
-		contact.setArchived(false);
+	ResponseEntity<GenericResponse> saveContact(@RequestBody ContactDTO contactDto){
+		gr = new GenericResponse();
+		payload = new HashMap<>();
+		contactDto.setArchived(false);
 		try {
-			websiteService.saveContact(contact);
+			websiteService.saveContact(contactDto.convert());
+			payload.put(Constants.MESSAGE, "ok");
+			status=HttpStatus.OK;
 		}catch(CustomWebsiteRuntimeException e) {
-			return ResponseEntity.badRequest().build();
+			payload.put(Constants.MESSAGE, e);
+			status=HttpStatus.BAD_REQUEST;
 		}
-		return ResponseEntity.ok().build();
+		gr.setPayLoad(payload);
+		gr.setStatus(status);
+		return new ResponseEntity<>(gr, status);
 	}
 	
 	@GetMapping("/getAllContacts")
-	ResponseEntity<List<Contact>> getAll(){
-		List<Contact> results = websiteService.getAllContacts();	
-		return ResponseEntity.ok().body(results);
+	ResponseEntity<GenericResponse> getAll(){
+		gr = new GenericResponse();
+		payload = new HashMap<>();
+		List<Contact> results = websiteService.getAllContacts();
+		status = HttpStatus.OK;
+		payload.put(Constants.RESULT, results);
+		gr.setPayLoad(payload);
+		gr.setStatus(status);
+		return new ResponseEntity<>(gr, status);
 	}
 	
 	@GetMapping("/refreshToken")
-	ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws StreamWriteException, DatabindException, IOException{
+	ResponseEntity<GenericResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		gr = new GenericResponse();
+		payload = new HashMap<>();
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 			try {
@@ -74,30 +97,39 @@ public class WebsiteController {
 				DecodedJWT decodedJWT = verifier.verify(refreshToken);
 				String username = decodedJWT.getSubject();
 				User user = userImpl.getUser(username);
-				String access_token = JWT.create()
+				String accessToken = JWT.create()
 						.withSubject(user.getEmail())
 						.withExpiresAt(new Date(System.currentTimeMillis()+ 10*60*1000))
 						.withIssuer(request.getRequestURL().toString())
 						.withClaim("roles", user.getRoles().stream().map(Role::getType).collect(Collectors.toList()))
 						.sign(algorithm);
 				HashMap<String, String> tokens = new HashMap<>();
-				tokens.put("access_token", access_token);
-				tokens.put("refresh_token", refreshToken);
+				tokens.put(Constants.TOKEN, accessToken);
+				tokens.put(Constants.REFRESH_TOKEN, refreshToken);
 				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+				status = HttpStatus.OK;
+				payload.put(Constants.TOKEN, accessToken);
+				payload.put(Constants.REFRESH_TOKEN, refreshToken);
+
 			}catch(Exception e) {
 				log.error("Error logging in: {}", e.getMessage());
-				response.setHeader("error", e.getMessage());
+				response.setHeader(Constants.ERROR, e.getMessage());
 				response.setStatus(HttpStatus.FORBIDDEN.value());
 				HashMap<String, String> error = new HashMap<>();
-				error.put("error_message", e.getMessage());
+				error.put(Constants.ERROR, e.getMessage());
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				new ObjectMapper().writeValue(response.getOutputStream(), error);
+				status = HttpStatus.BAD_REQUEST;
+				payload.put(Constants.MESSAGE, "error");
 			}
 			
 		}else {
-			throw new RuntimeException("Refresh Token is missing");
+			throw new CustomWebsiteRuntimeException("Refresh Token is missing");
 		}
-		return ResponseEntity.ok().build();
+		
+		gr.setPayLoad(payload);
+		gr.setStatus(status);
+		return new ResponseEntity<>(gr, status);
 	} 
 	
 	

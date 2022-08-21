@@ -15,11 +15,15 @@ import com.kartikeychoudhary.exceptions.CustomWebsiteRuntimeException;
 import com.kartikeychoudhary.modal.Notification;
 import com.kartikeychoudhary.services.NotificationService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NotificationImplementations implements NotificationService {
+
+	private final RestTemplate rest;
 	
 	@Value("${GOTIFY_API_TOKEN}")
 	private  String token;
@@ -49,7 +53,6 @@ public class NotificationImplementations implements NotificationService {
 		new Thread(runnable).start();
 	}
 	
-	private NotificationImplementations() {}
 	
 	public Notification validateAndCreateNotification(String message, String title, int priority) {
 		log.info("NotificationUtil.createNotification() : start");
@@ -69,7 +72,6 @@ public class NotificationImplementations implements NotificationService {
 	public void sendNotification(Notification notification) throws JsonProcessingException {
 		log.info("NotificationUtil.sendNotification() : start");
 
-		RestTemplate rest = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("content-type", "application/json");
 
@@ -79,13 +81,18 @@ public class NotificationImplementations implements NotificationService {
 		String body = json;
 
 		HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+		try {
 		ResponseEntity<String> responseEntity = rest.exchange(url+"message?token="+token, HttpMethod.POST, requestEntity, String.class);
+		if(null == responseEntity) {throw new CustomWebsiteRuntimeException("Response is empty");}
 		HttpStatus httpStatus = responseEntity.getStatusCode();
 		int status = httpStatus.value();
 		String response = responseEntity.getBody();
 		log.info("NotificationUtil.sendNotification() : " + notification.toString());
 		log.info("NotificationUtil.sendNotification() Response status : " + status);
 		log.info("NotificationUtil.sendNotification() Response : " + response);
+		}catch(CustomWebsiteRuntimeException e) {
+			log.error("NotificationUtil.sendNotification() : ERROR ", e);
+		}
 	}
 
 }
