@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.kartikeychoudhary.implementations.UserImplementation;
 import com.kartikeychoudhary.modal.Role;
 import com.kartikeychoudhary.modal.User;
+import com.kartikeychoudhary.response.GenericResponse;
+import com.kartikeychoudhary.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
-	private final UserImplementation userImpl;
+	private final UserService userImpl;
 	
 	@GetMapping("/all")
 	public ResponseEntity<List<User>> getUsers(){
@@ -41,7 +42,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/role/add")
-	public ResponseEntity<?> saveRole(@RequestBody String email, @RequestBody String type){
+	public ResponseEntity<GenericResponse> saveRole(@RequestBody String email, @RequestBody String type){
 		userImpl.addRoleToUser(email, type);
 		return ResponseEntity.ok().build();
 	}

@@ -19,12 +19,11 @@ public class ContactDTO {
 	
 	public Contact convert() {
 		Contact contact = new Contact();
-		contact.setEmail(this.getEmail());
-		contact.setMessage(this.getMessage());
-		contact.setArchived(this.getArchived());
-		contact.setName(this.getName());
-		contact.setSubject(this.getSubject());
-
+		contact.setArchived(this.archived);
+		contact.setMessage(this.message);
+		contact.setName(this.name);
+		contact.setSubject(this.subject);
+		contact.setEmail(this.email);
 		return contact;
 	}
 }

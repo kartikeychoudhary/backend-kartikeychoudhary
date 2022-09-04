@@ -25,9 +25,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kartikeychoudhary.constants.Constants;
 import com.kartikeychoudhary.dto.ContactDTO;
 import com.kartikeychoudhary.exceptions.CustomWebsiteRuntimeException;
@@ -89,10 +86,10 @@ public class WebsiteController {
 		gr = new GenericResponse();
 		payload = new HashMap<>();
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+		if(authorizationHeader != null && authorizationHeader.startsWith(Constants.JWT_PREFIX)) {
 			try {
-				String refreshToken = authorizationHeader.substring("Bearer ".length());
-				Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+				String refreshToken = authorizationHeader.substring(Constants.JWT_PREFIX.length());
+				Algorithm algorithm = Algorithm.HMAC256(Constants.SECRET.getBytes());
 				JWTVerifier verifier = JWT.require(algorithm).build();
 				DecodedJWT decodedJWT = verifier.verify(refreshToken);
 				String username = decodedJWT.getSubject();
@@ -106,7 +103,6 @@ public class WebsiteController {
 				HashMap<String, String> tokens = new HashMap<>();
 				tokens.put(Constants.TOKEN, accessToken);
 				tokens.put(Constants.REFRESH_TOKEN, refreshToken);
-				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 				status = HttpStatus.OK;
 				payload.put(Constants.TOKEN, accessToken);
 				payload.put(Constants.REFRESH_TOKEN, refreshToken);
@@ -118,7 +114,6 @@ public class WebsiteController {
 				HashMap<String, String> error = new HashMap<>();
 				error.put(Constants.ERROR, e.getMessage());
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-				new ObjectMapper().writeValue(response.getOutputStream(), error);
 				status = HttpStatus.BAD_REQUEST;
 				payload.put(Constants.MESSAGE, "error");
 			}

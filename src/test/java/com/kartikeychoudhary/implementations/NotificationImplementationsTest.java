@@ -1,11 +1,8 @@
 package com.kartikeychoudhary.implementations;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +13,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kartikeychoudhary.exceptions.CustomWebsiteRuntimeException;
 import com.kartikeychoudhary.modal.Notification;
 
 class NotificationImplementationsTest {

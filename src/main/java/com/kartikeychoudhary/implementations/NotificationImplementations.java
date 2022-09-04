@@ -80,10 +80,10 @@ public class NotificationImplementations implements NotificationService {
 	
 		String body = json;
 
-		HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+		HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
 		try {
 		ResponseEntity<String> responseEntity = rest.exchange(url+"message?token="+token, HttpMethod.POST, requestEntity, String.class);
-		if(null == responseEntity) {throw new CustomWebsiteRuntimeException("Response is empty");}
+		if(!responseEntity.hasBody()) {throw new CustomWebsiteRuntimeException("Response is empty");}
 		HttpStatus httpStatus = responseEntity.getStatusCode();
 		int status = httpStatus.value();
 		String response = responseEntity.getBody();
