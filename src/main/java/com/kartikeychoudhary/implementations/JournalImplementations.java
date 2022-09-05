@@ -49,6 +49,7 @@ public class JournalImplementations implements JournalService{
 
 	@Override
 	public JournalItem archiveJournalItem(JournalItem journalItem) {
+		journalItem.setArchived(true);
 		if(journalItem.getArchived() == null) {throw new CustomGenericRuntimeException("Archive value was null");}
 		log.info("Journal archive saveJournalItem()");
 		return journalRepo.save(journalItem);
