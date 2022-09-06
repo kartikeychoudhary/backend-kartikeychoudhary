@@ -8,8 +8,7 @@ import com.kartikeychoudhary.modal.Todo;
 public interface TodoService {
 	List<Todo> getTodoForDay(Date date);
 	List<Todo> getAll();
-	Todo saveTodo(Todo todo);
-	Todo updateTodo(Todo todo);
+	Todo saveUpdateTodo(Todo todo);
 	String deleteTodo(Todo todo);
 	Todo archiveTodo(Todo todo);
 	Todo toggleTodo(Todo todo);

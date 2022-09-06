@@ -43,9 +43,8 @@ public class UserImplementation implements UserService, UserDetailsService{
 		}
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		user.getRoles().forEach(role->
-		{
-			authorities.add(new SimpleGrantedAuthority(role.getType()));
-		});
+			authorities.add(new SimpleGrantedAuthority(role.getType()))
+		);
 		log.error("END : loadUserByUsername()");
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
 	}

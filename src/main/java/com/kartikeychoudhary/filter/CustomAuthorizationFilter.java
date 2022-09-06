@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.JWT;
@@ -42,10 +40,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter{
 			filterChain.doFilter(request, response);
 		}else {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+			if(authorizationHeader != null && authorizationHeader.startsWith(Constants.JWT_PREFIX)) {
 				try {
-					String token = authorizationHeader.substring("Bearer ".length());
-					Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+					String token = authorizationHeader.substring(Constants.JWT_PREFIX.length());
+					Algorithm algorithm = Algorithm.HMAC256(Constants.SECRET.getBytes());
 					JWTVerifier verifier = JWT.require(algorithm).build();
 					DecodedJWT decodedJWT = verifier.verify(token);
 					String username = decodedJWT.getSubject();

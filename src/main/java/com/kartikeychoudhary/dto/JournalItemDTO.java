@@ -1,23 +1,27 @@
-package com.kartikeychoudhary.modal;
+package com.kartikeychoudhary.dto;
 
 import java.sql.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.kartikeychoudhary.modal.JournalItem;
 
-@Entity
-public class JournalItem {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+public class JournalItemDTO {
+
 	private Long id;
 	private String description;
 	private Date date;
 	private Boolean archived;
 	
-	public JournalItem() {
+	public JournalItem convert() {
+		JournalItem journalItem = new JournalItem();
+		journalItem.setId(this.id);
+		journalItem.setDescription(this.description);
+		journalItem.setDate(this.date);
+		journalItem.setArchived(this.archived);
+
+		return journalItem;
+	}
+	
+	public JournalItemDTO() {
 		// need empty constructor
 	}
 
@@ -52,5 +56,6 @@ public class JournalItem {
 	public void setArchived(Boolean archived) {
 		this.archived = archived;
 	}
+	
 	
 }

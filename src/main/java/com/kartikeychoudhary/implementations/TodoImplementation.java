@@ -34,16 +34,11 @@ public class TodoImplementation implements TodoService {
 	}
 
 	@Override
-	public Todo saveTodo(Todo todo) {
+	public Todo saveUpdateTodo(Todo todo) {
 		log.info("Todo saveTodo()");
 		return todoRepo.save(todo);
 	}
 
-	@Override
-	public Todo updateTodo(Todo todo) {
-		log.info("update Todo updateTodo()");
-		return todoRepo.save(todo);
-	}
 
 	@Override
 	public String deleteTodo(Todo todo) {
@@ -60,8 +55,9 @@ public class TodoImplementation implements TodoService {
 
 	@Override
 	public Todo toggleTodo(Todo todo) {
-		// TODO Auto-generated method stub
-		return null;
+		todo.setCompleted(!todo.getCompleted());
+		this.saveUpdateTodo(todo);
+		return todo;
 	}
 
 }

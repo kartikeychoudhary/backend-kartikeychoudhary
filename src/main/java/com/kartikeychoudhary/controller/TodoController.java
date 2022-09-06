@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kartikeychoudhary.implementations.TodoImplementation;
+import com.kartikeychoudhary.dto.TodoDTO;
+import com.kartikeychoudhary.exceptions.CustomGenericRuntimeException;
 import com.kartikeychoudhary.modal.Todo;
+import com.kartikeychoudhary.response.GenericResponse;
+import com.kartikeychoudhary.services.TodoService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/todo")
 public class TodoController {
-	private final TodoImplementation todoImpl;
+	private final TodoService todoImpl;
 	
 	@GetMapping
 	ResponseEntity<List<Todo>> getTodo(@RequestParam String date){
@@ -38,34 +41,32 @@ public class TodoController {
 	}
 	
 	@PostMapping
-	ResponseEntity<Todo> saveTodo(@RequestBody Todo todo){
+	ResponseEntity<Todo> saveTodo(@RequestBody TodoDTO todo){
 		todo.setArchived(false);
 		todo.setCompleted(false);
-		return ResponseEntity.ok().body(todoImpl.saveTodo(todo));
+		return ResponseEntity.ok().body(todoImpl.saveUpdateTodo(todo.convert()));
 	}
 	
 	@PatchMapping
-	ResponseEntity<Todo> updateTodo(@RequestBody Todo todo){
-		return ResponseEntity.ok().body(todoImpl.updateTodo(todo));
+	ResponseEntity<Todo> updateTodo(@RequestBody TodoDTO todo){
+		return ResponseEntity.ok().body(todoImpl.saveUpdateTodo(todo.convert()));
 	}
 	
 	@PatchMapping("/toggle")
-	ResponseEntity<Todo> toggleTodo(@RequestBody Todo todo){
-		if(todo.getCompleted() == null) {throw new RuntimeException("isComplete is null");}
-		todo.setCompleted(!todo.getCompleted());
-		return ResponseEntity.ok().body(todoImpl.updateTodo(todo));
+	ResponseEntity<Todo> toggleTodo(@RequestBody TodoDTO todo){
+		if(todo.getCompleted() == null) {throw new CustomGenericRuntimeException("isComplete is null");}
+		return ResponseEntity.ok().body(todoImpl.saveUpdateTodo(todo.convert()));
 	}
 	
 	@PatchMapping("/archive")
-	ResponseEntity<Todo> archiveTodo(@RequestBody Todo todo){
-		if(todo.getArchived() == null) {throw new RuntimeException("isComplete is null");}
-		todo.setArchived(!todo.getArchived());
-		return ResponseEntity.ok().body(todoImpl.archiveTodo(todo));
+	ResponseEntity<Todo> archiveTodo(@RequestBody TodoDTO todo){
+		if(todo.getArchived() == null) {throw new CustomGenericRuntimeException("isComplete is null");}
+		return ResponseEntity.ok().body(todoImpl.archiveTodo(todo.convert()));
 	}
 	
 	@DeleteMapping
-	ResponseEntity<?> deleteTodo(@RequestBody Todo todo){
-		todoImpl.deleteTodo(todo);
+	ResponseEntity<GenericResponse> deleteTodo(@RequestBody TodoDTO todo){
+		todoImpl.deleteTodo(todo.convert());
 		return ResponseEntity.ok().build();
 	}
 }

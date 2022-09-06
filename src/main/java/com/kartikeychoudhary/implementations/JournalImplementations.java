@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.kartikeychoudhary.exceptions.CustomGenericRuntimeException;
 import com.kartikeychoudhary.modal.JournalItem;
 import com.kartikeychoudhary.repository.JournalRepo;
 import com.kartikeychoudhary.services.JournalService;
@@ -33,16 +34,11 @@ public class JournalImplementations implements JournalService{
 	}
 
 	@Override
-	public JournalItem saveJournalItem(JournalItem journalItem) {
+	public JournalItem saveUpdateJournalItem(JournalItem journalItem) {
 		log.info("Journal save saveJournalItem()");
 		return journalRepo.save(journalItem);
 	}
 
-	@Override
-	public JournalItem updateJournalItem(JournalItem journalItem) {
-		log.info("Journal save saveJournalItem()");
-		return journalRepo.save(journalItem);
-	}
 
 	@Override
 	public String deleteJournalItem(JournalItem journalItem) {
@@ -53,7 +49,8 @@ public class JournalImplementations implements JournalService{
 
 	@Override
 	public JournalItem archiveJournalItem(JournalItem journalItem) {
-		if(journalItem.getArchived() == null) {throw new RuntimeException("Archive value was null");}
+		journalItem.setArchived(true);
+		if(journalItem.getArchived() == null) {throw new CustomGenericRuntimeException("Archive value was null");}
 		log.info("Journal archive saveJournalItem()");
 		return journalRepo.save(journalItem);
 	}

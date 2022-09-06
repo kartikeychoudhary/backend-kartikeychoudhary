@@ -1,10 +1,8 @@
 package com.kartikeychoudhary.filter;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
@@ -23,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kartikeychoudhary.constants.Constants;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +51,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 			Authentication authentication) throws IOException, ServletException {
 		log.info("START : successfulAuthentication()");
 		User user = (User) authentication.getPrincipal();
-		Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); // WIP save somewhere secure
+		Algorithm algorithm = Algorithm.HMAC256(Constants.SECRET.getBytes());
 		String accessToken = JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis()+ 1000*60*60*24))
