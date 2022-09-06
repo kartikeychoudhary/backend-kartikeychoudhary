@@ -16,7 +16,9 @@ public class Contact {
 	private String subject;
 	private Boolean archived;
 	
-	public Contact() {}
+	public Contact() {
+		// need empty constructor
+	}
 	
 	public Long getId() {
 		return id;

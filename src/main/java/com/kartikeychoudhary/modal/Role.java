@@ -18,7 +18,9 @@ public class Role {
 	private Long id;
 	private String type;
 	
-	public Role() {}
+	public Role() {
+		// need empty constructor
+	}
 
 	public Long getId() {
 		return id;
