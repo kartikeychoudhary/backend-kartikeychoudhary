@@ -5,10 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 /** 
  * @author 	Kartikey Choudhary (https://kartikeychoudhary.com)
  * @version 1.0
@@ -16,12 +12,29 @@ import lombok.NoArgsConstructor;
  */
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Role {
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String type;
+	
+	public Role() {}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
 }

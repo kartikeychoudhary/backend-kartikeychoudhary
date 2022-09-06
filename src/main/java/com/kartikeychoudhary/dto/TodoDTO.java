@@ -4,13 +4,7 @@ import java.sql.Date;
 
 import com.kartikeychoudhary.modal.Todo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class TodoDTO {
 	private Long id;
 	private String description;
@@ -27,4 +21,38 @@ public class TodoDTO {
 		todo.setArchived(this.archived);
 		return todo;
 	}
+	public TodoDTO() {
+		// need empty constructor
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	public Boolean getCompleted() {
+		return completed;
+	}
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
+	}
+	public Boolean getArchived() {
+		return archived;
+	}
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+	
 }

@@ -2,13 +2,7 @@ package com.kartikeychoudhary.dto;
 
 import com.kartikeychoudhary.modal.Contact;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ContactDTO {
 	
 	private String email;
@@ -26,4 +20,50 @@ public class ContactDTO {
 		contact.setEmail(this.email);
 		return contact;
 	}
+	
+	public ContactDTO() {
+		// need empty constructor
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public Boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+	
+	
 }

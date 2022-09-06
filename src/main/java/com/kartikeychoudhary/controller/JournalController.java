@@ -41,31 +41,30 @@ public class JournalController {
 	}
 	
 	@GetMapping("/all")
-	ResponseEntity<List<JournalItem>> getAllTodo(){
+	ResponseEntity<List<JournalItem>> getAllJournalItem(){
 		List<JournalItem> journalItems = journalImpl.getAll();
 		return ResponseEntity.ok().body(journalItems);
 	}
 	
 	@PostMapping
-	ResponseEntity<JournalItem> saveTodo(@RequestBody JournalItemDTO item){
+	ResponseEntity<JournalItem> saveJournal(@RequestBody JournalItemDTO item){
 		item.setArchived(false);
 		return ResponseEntity.ok().body(journalImpl.saveUpdateJournalItem(item.convert()));
 	}
 	
 	@PatchMapping
-	ResponseEntity<JournalItem> updateTodo(@RequestBody JournalItemDTO item){
+	ResponseEntity<JournalItem> updateJournal(@RequestBody JournalItemDTO item){
 		return ResponseEntity.ok().body(journalImpl.saveUpdateJournalItem(item.convert()));
 	}
 	
 	@PatchMapping("/archive")
-	ResponseEntity<JournalItem> archiveTodo(@RequestBody JournalItemDTO item){
+	ResponseEntity<JournalItem> archiveJournalItem(@RequestBody JournalItemDTO item){
 		if(item.getArchived() == null) {throw new CustomGenericRuntimeException("isArchived is null");}
-		item.setArchived(!item.getArchived());
 		return ResponseEntity.ok().body(journalImpl.archiveJournalItem(item.convert()));
 	}
 	
 	@DeleteMapping
-	ResponseEntity<GenericResponse> deleteTodo(@RequestBody JournalItemDTO item){
+	ResponseEntity<GenericResponse> deleteJournalItem(@RequestBody JournalItemDTO item){
 		journalImpl.deleteJournalItem(item.convert());
 		return ResponseEntity.ok().build();
 	}

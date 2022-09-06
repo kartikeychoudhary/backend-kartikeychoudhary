@@ -55,14 +55,12 @@ public class TodoController {
 	@PatchMapping("/toggle")
 	ResponseEntity<Todo> toggleTodo(@RequestBody TodoDTO todo){
 		if(todo.getCompleted() == null) {throw new CustomGenericRuntimeException("isComplete is null");}
-		todo.setCompleted(!todo.getCompleted());
 		return ResponseEntity.ok().body(todoImpl.saveUpdateTodo(todo.convert()));
 	}
 	
 	@PatchMapping("/archive")
 	ResponseEntity<Todo> archiveTodo(@RequestBody TodoDTO todo){
 		if(todo.getArchived() == null) {throw new CustomGenericRuntimeException("isComplete is null");}
-		todo.setArchived(!todo.getArchived());
 		return ResponseEntity.ok().body(todoImpl.archiveTodo(todo.convert()));
 	}
 	

@@ -4,13 +4,6 @@ import java.sql.Date;
 
 import com.kartikeychoudhary.modal.JournalItem;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class JournalItemDTO {
 
 	private Long id;
@@ -27,4 +20,42 @@ public class JournalItemDTO {
 
 		return journalItem;
 	}
+	
+	public JournalItemDTO() {
+		// need empty constructor
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(Boolean archived) {
+		this.archived = archived;
+	}
+	
+	
 }
